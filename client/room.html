@@ -9,15 +9,20 @@
     <script src="room.js" defer></script>
   </head>
   <body>
-    <canvas class="game-board"></canvas>
+    <canvas class="game-board" data-canvas></canvas>
     <section class="text-section">
-      <h3 class="word"></h3>
-      <div class="messages">
-        <form class="guess-form">
-          <input type="text" class="guess-input" placeholder="Your Guess..." />
+      <h3 class="word" data-word></h3>
+      <div class="messages" data-messages>
+        <form class="guess-form" data-guess-form>
+          <input
+            type="text"
+            class="guess-input"
+            placeholder="Your Guess..."
+            data-guess-input
+          />
           <button type="submit" class="guess-btn">Guess</button>
         </form>
-        <button type="button">Ready</button>
+        <button type="button" data-ready-btn>Ready</button>
       </div>
     </section>
     <template data-guess-template>

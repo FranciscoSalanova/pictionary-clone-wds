@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html room.html",
+    "start": "parcel index.html room.html --open",
     "build": "parcel build index.html room.html"
   },
   "keywords": [],
