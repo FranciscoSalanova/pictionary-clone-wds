@@ -19,7 +19,14 @@ const messagesElement = document.querySelector("[data-messages]")
 const readyButton = document.querySelector("[data-ready-btn]")
 
 socket.emit("join-room", { name: name, roomId: roomId })
+socket.on("start-drawer", startRoundDrawer)
+socket.on("start-guesser", startRoundGuesser)
 endRound()
+
+readyButton.addEventListener("click", () => {
+  hide(readyButton)
+  socket.emit("ready")
+})
 
 function endRound() {
   hide(guessForm)
@@ -27,4 +34,16 @@ function endRound() {
 
 function hide(element) {
   element.classList.add("hide")
+}
+
+function show(element) {
+  element.classList.remove("hide")
+}
+
+function startRoundDrawer(word) {
+  wordElement.textContent = word
+}
+
+function startRoundGuesser() {
+  show(guessForm)
 }

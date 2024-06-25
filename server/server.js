@@ -1,6 +1,8 @@
 const production = process.env.NODE_ENV === "production"
 const clientURL = production ? "realsite.com" : "http://localhost:1234"
 
+const WORDS = ["Dog", "Bike", "Human"]
+
 const io = require("socket.io")(3000, {
   cors: {
     origin: clientURL,
@@ -21,8 +23,22 @@ io.on("connection", (socket) => {
     room.users.push(user)
     socket.join(room.id)
 
+    socket.on("ready", () => {
+      user.ready = true
+      if (room.users.every((user) => user.ready)) {
+        room.word = getRandomEntry(WORDS)
+        room.drawer = getRandomEntry(room.users)
+        io.to(room.drawer.id).emit("start-drawer", room.word)
+        room.drawer.socket.to(room.id).emit("start-guesser")
+      }
+    })
+
     socket.on("disconnect", () => {
       room.users = room.users.filter((u) => u !== user)
     })
   })
 })
+
+function getRandomEntry(array) {
+  return array[Math.floor(Math.random() * array.length)]
+}
