@@ -15,6 +15,7 @@ io.on("connection", (socket) => {
   socket.on("join-room", (data) => {
     const user = { id: socket.id, name: data.name, socket: socket }
     let room = rooms[data.roomId]
+
     if (room == null) {
       room = { users: [], id: data.roomId }
       rooms[data.roomId] = room
@@ -31,6 +32,10 @@ io.on("connection", (socket) => {
         io.to(room.drawer.id).emit("start-drawer", room.word)
         room.drawer.socket.to(room.id).emit("start-guesser")
       }
+    })
+
+    socket.on("draw", (data) => {
+      socket.to(room.id).emit("draw-line", data.start, data.end)
     })
 
     socket.on("disconnect", () => {

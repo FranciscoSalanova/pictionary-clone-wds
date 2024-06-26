@@ -1,4 +1,5 @@
 import { io } from "socket.io-client"
+import DrawableCanvas from "./DrawableCanvas"
 
 const production = process.env.NODE_ENV === "production"
 const serverURL = production ? "realsite.com" : "http://localhost:3000"
@@ -18,15 +19,20 @@ const wordElement = document.querySelector("[data-word]")
 const messagesElement = document.querySelector("[data-messages]")
 const readyButton = document.querySelector("[data-ready-btn]")
 
+const drawableCanvas = new DrawableCanvas(canvas, socket)
+
 socket.emit("join-room", { name: name, roomId: roomId })
 socket.on("start-drawer", startRoundDrawer)
 socket.on("start-guesser", startRoundGuesser)
 endRound()
+resizeCanvas()
 
 readyButton.addEventListener("click", () => {
   hide(readyButton)
   socket.emit("ready")
 })
+
+window.addEventListener("resize", resizeCanvas())
 
 function endRound() {
   hide(guessForm)
@@ -46,4 +52,13 @@ function startRoundDrawer(word) {
 
 function startRoundGuesser() {
   show(guessForm)
+}
+
+function resizeCanvas() {
+  canvas.width = null
+  canvas.height = null
+
+  const clientDimensions = canvas.getBoundingClientRect()
+  canvas.width = clientDimensions.width
+  canvas.height = clientDimensions.height
 }
